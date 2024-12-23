@@ -4,10 +4,12 @@ layout: default
 
 <h3 class="post-title">{{ page.title }}</h3>
 <hr class="post-divider"> <!-- 제목 밑에 줄 추가 -->
+{% if page.toc != false %}
 <details>
     <summary>목차</summary>
     {% toc %}
-    </details>
+</details>
+{% endif %}
     
 <hr class="post-divider"> <!-- 목차 밑에 줄 추가 -->
 {{ content }}
