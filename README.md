@@ -36,7 +36,8 @@
 ├── assets/              # 이미지, CSS, JS 등 정적 파일을 저장하는 폴더
 │   ├── css/             # CSS 파일 저장 (스타일시트)
 │   ├── images/          # 블로그에 사용되는 이미지 파일 저장
-│   └── js/              # JavaScript 파일 저장 (동적 기능 추가)
+│   ├── js/              # JavaScript 파일 저장 (동적 기능 추가)
+│   └── downloads/ 
 ├── category/            # 각 카테고리 페이지를 정의하는 HTML 파일 저장
 │   ├── bootcamp.html
 │   ├── machine-learning.html
