@@ -3,7 +3,6 @@ layout: post
 title: "Machine Learning 01: 머신러닝이란?"
 date: 2024-12-05
 categories: [Machine Learning] 
-group: "Group1"
 ---
 
 머신러닝(Machine Learning)은 현대 기술의 핵심으로, 데이터를 기반으로 문제를 해결하는 강력한 도구입니다. 이번 글에서는 머신러닝의 정의와 필요성을 이해하고, 기존의 전통적인 프로그래밍 방식과의 차이점을 살펴보겠습니다.
