@@ -4,9 +4,26 @@
     <ul>
         {% for category in site.categories %}
         <li>
-            <a href="{{ site.url }}{{ site.baseurl }}/category/{{ category[0] | slugify: }}/">
+            <a href="{{ site.url }}{{ site.baseurl }}/category/{{ category[0] | slugify }}/">
                 {{ category[0] | capitalize }}
             </a>
+            <ul>
+                {% assign grouped_posts = category[1] | group_by: "group" %}
+                {% for group in grouped_posts %}
+                <li>
+                    <strong>{{ group.name | capitalize }}</strong> <!-- 그룹 이름 -->
+                    <ul>
+                        {% for post in group.items %}
+                        <li>
+                            <a href="{{ site.url }}{{ site.baseurl }}{{ post.url }}">
+                                {{ post.title }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
         </li>
         {% endfor %}
     </ul>
