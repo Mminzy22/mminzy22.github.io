@@ -177,7 +177,7 @@ code {
 }
 
 /* 본문 텍스트 */
-.post p {
+.post p, .post summary {
     margin-bottom: 15px;
     font-size: 14px;
 }
