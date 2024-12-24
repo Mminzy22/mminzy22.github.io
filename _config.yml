@@ -15,7 +15,6 @@ plugins:
   - jekyll-paginate   # 페이지를 나누는 기능을 제공하는 플러그인
   - jekyll-sitemap    # 사이트맵을 자동으로 생성하는 플러그인
   - jekyll-archives   # 카테고리 및 태그별 아카이브를 생성하는 플러그인
-#  - jekyll-toc
 
 # TOC 설정
 # 사용 방법
@@ -36,10 +35,6 @@ jekyll-archives:
 # 페이지네이션 설정
 paginate: 8             # 한 페이지에 표시할 포스트 수
 paginate_path: "/page:num" # 페이징 경로 설정
-
-# CSS 추가 설정
-sass:
-  style: expanded       # SASS 컴파일 스타일을 사람이 읽기 쉬운 expanded 형식으로 설정
 
 # 빌드에서 제외할 파일
 exclude:
