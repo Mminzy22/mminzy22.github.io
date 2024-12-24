@@ -267,9 +267,9 @@ lr_r2 = r2_score(y_test, y_pred_lr)
    R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}
    $$
 
-   - \\(\text{SS}_{\text{res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2\\): 잔차 제곱합(Residual Sum of Squares).
-   - \\(\text{SS}_{\text{tot}} = \sum_{i=1}^{n} (y_i - \bar{y})^2\\): 총 제곱합(Total Sum of Squares).
-   - 값의 범위는 \\(-\infty\\)에서 1까지이며, 1에 가까울수록 모델이 데이터를 잘 설명합니다.
+   - $\text{SS}_{\text{res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$: 잔차 제곱합(Residual Sum of Squares).
+   - $\text{SS}_{\text{tot}} = \sum_{i=1}^{n} (y_i - \bar{y})^2$: 총 제곱합(Total Sum of Squares).
+   - 값의 범위는 $-\infty$에서 1까지이며, 1에 가까울수록 모델이 데이터를 잘 설명합니다.
    - 음수 값은 모델이 데이터를 잘 설명하지 못함을 의미합니다.
 
 
