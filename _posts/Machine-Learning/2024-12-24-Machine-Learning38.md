@@ -242,25 +242,31 @@ lr_r2 = r2_score(y_test, y_pred_lr)
   선형 회귀 모델의 성능은 여러 평가 지표를 통해 확인할 수 있습니다.
 
 1. **MAE (Mean Absolute Error)**:
+
    \\[
    \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
    \\]
+   
    - 실제값과 예측값의 차이의 절대값 평균.
    - 값이 작을수록 모델이 예측에 성공한 것입니다.
    - 단위는 목표값과 동일합니다.
 
 2. **MSE (Mean Squared Error)**:
+
    \\[
    \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
    \\]
+
    - 예측값과 실제값의 차이를 제곱한 뒤 평균을 구한 값.
    - 큰 오차에 더 큰 패널티를 부여합니다.
    - 값이 작을수록 좋습니다.
 
 3. **R² (결정 계수)**:
+
    \\[
    R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}
    \\]
+
    - \\(\text{SS}_{\text{res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2\\): 잔차 제곱합(Residual Sum of Squares).
    - \\(\text{SS}_{\text{tot}} = \sum_{i=1}^{n} (y_i - \bar{y})^2\\): 총 제곱합(Total Sum of Squares).
    - 값의 범위는 \\(-\infty\\)에서 1까지이며, 1에 가까울수록 모델이 데이터를 잘 설명합니다.
