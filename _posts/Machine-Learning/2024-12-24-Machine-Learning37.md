@@ -94,228 +94,191 @@ tag: []
 </details>
 
 
-### 1. 데이터 스케일링(표준화)
-
-```python
-from sklearn.preprocessing import StandardScaler
-
-# 표준화 (훈련 데이터로부터 학습)
-scaler = StandardScaler()
-X_train_scaled = pd.DataFrame(scaler.fit_transform(X_train_imputed), columns=X_train.columns)
-X_test_scaled = pd.DataFrame(scaler.transform(X_test_imputed), columns=X_test.columns)
-```
-
-
-#### 코드 설명
-
-1. **라이브러리 임포트**:
-   - `StandardScaler`: Scikit-learn의 데이터 표준화 클래스입니다. 데이터의 평균을 0으로, 표준 편차를 1로 조정합니다.
-
-2. **스케일링 객체 생성**:
-   - `scaler = StandardScaler()`:
-     - 표준화를 수행할 `StandardScaler` 객체를 생성합니다.
-
-3. **훈련 데이터 스케일링**:
-   - `scaler.fit_transform(X_train_imputed)`:
-     - `fit_transform` 메서드를 통해 훈련 데이터를 기준으로 평균과 표준 편차를 계산(`fit`)하고, 데이터를 표준화(`transform`)합니다.
-   - `pd.DataFrame(...)`:
-     - 표준화된 데이터를 Pandas 데이터프레임으로 변환하고, 원래 열 이름(`X_train.columns`)을 유지합니다.
-
-4. **테스트 데이터 스케일링**:
-   - `scaler.transform(X_test_imputed)`:
-     - 훈련 데이터에서 계산한 평균과 표준 편차를 기반으로 테스트 데이터를 표준화합니다.
-     - 테스트 데이터는 `fit`을 수행하지 않고, 학습된 훈련 데이터의 기준에 맞춰야 데이터 누출(Data Leakage)을 방지할 수 있습니다.
-
-
-#### 사용 목적
-1. **특성 간 크기 차이 조정**:
-   - 특성의 값 범위(스케일)가 크게 다를 경우, 머신러닝 모델의 학습 성능에 영향을 줄 수 있습니다. 이를 해결하기 위해 표준화를 사용합니다.
-   - 예: 주택 데이터에서 방의 개수(정수)와 면적(제곱미터)의 값 범위가 다를 수 있습니다.
-
-2. **특정 알고리즘의 요구사항**:
-   - 거리 기반 알고리즘(예: KNN, SVM) 또는 경사 하강법을 사용하는 알고리즘(예: 선형 회귀, 로지스틱 회귀, 신경망)은 특성 값의 범위에 민감합니다. 이 경우, 스케일링이 필수적입니다.
-
-
-#### 활용 사례
-1. **선형 모델**:
-   - 선형 회귀, 로지스틱 회귀, 서포트 벡터 머신(SVM) 등에서 특성의 스케일이 중요합니다.
-
-2. **거리 기반 모델**:
-   - KNN, K-평균(K-Means) 등 거리 계산을 사용하는 모델은 스케일링되지 않은 데이터에서 잘못된 결과를 초래할 수 있습니다.
-
-3. **신경망**:
-   - 신경망 모델은 데이터 스케일이 적절하지 않으면 학습이 느려지거나 비효율적으로 작동할 수 있습니다.
-
-
-#### 매개변수 설명
-1. **`fit_transform`**:
-   - `fit`과 `transform`을 동시에 수행합니다.
-   - `fit`: 데이터를 분석하여 평균과 표준 편차를 계산합니다.
-   - `transform`: 계산된 평균과 표준 편차를 사용해 데이터를 변환합니다.
-
-2. **`transform`**:
-   - 이미 계산된 평균과 표준 편차를 사용하여 데이터를 변환합니다.
-   - 테스트 데이터에서는 항상 `transform`만 사용해야 합니다.
-
-
-#### 사용 시 주의사항
-1. **훈련-테스트 데이터 분리**:
-   - 훈련 데이터로 계산된 평균과 표준 편차를 테스트 데이터에 사용해야 하며, 테스트 데이터에 대해 `fit_transform`을 수행하면 데이터 누출이 발생합니다.
-
-2. **표준화가 필요한 모델**:
-   - 의사결정 나무 기반 모델(예: Random Forest, Gradient Boosting)은 스케일링에 영향을 받지 않으므로 표준화가 불필요합니다.
-
-3. **결측치 처리 후 수행**:
-   - 스케일링은 결측치가 없는 상태에서 수행해야 합니다. 그렇지 않으면 오류가 발생하거나 왜곡된 결과가 나올 수 있습니다.
-
-
-#### 활용 상황
-1. **`fit_transform` 사용 (훈련 데이터)**:
-   ```python
-   X_train_scaled = scaler.fit_transform(X_train_imputed)
-   ```
-   - 훈련 데이터에서 평균과 표준 편차를 계산하고, 데이터를 변환.
-
-2. **`transform` 사용 (테스트 데이터)**:
-   ```python
-   X_test_scaled = scaler.transform(X_test_imputed)
-   ```
-   - 훈련 데이터에서 계산한 평균과 표준 편차를 사용해 테스트 데이터를 변환.
-
-3. **데이터 스케일링이 필요 없는 상황**:
-   - 스케일링이 불필요한 모델(예: 결정 트리, 랜덤 포레스트)을 사용하는 경우.
-
-
-### 2. 이상치 탐지 및 처리
+### 1. 이상치 탐지 및 처리 코드
 
 ```python
 from sklearn.ensemble import IsolationForest, RandomForestRegressor
 
-# 이상치 탐지 및 처리 (훈련 데이터에만 적용)
+# 1. 이상치 탐지
 clf = IsolationForest(contamination=0.05, random_state=42)
-X_train_scaled['anomaly'] = clf.fit_predict(X_train_scaled)
+X_train_imputed['anomaly'] = clf.fit_predict(X_train_imputed)
 
-# 이상치와 정상 데이터 분리
-outliers = X_train_scaled[X_train_scaled['anomaly'] == -1]  # 이상치 행
-non_outliers = X_train_scaled[X_train_scaled['anomaly'] != -1]  # 정상 행
+# 2. 이상치와 정상 데이터 분리
+outliers = X_train_imputed[X_train_imputed['anomaly'] == -1]  # 이상치 행
+non_outliers = X_train_imputed[X_train_imputed['anomaly'] != -1]  # 정상 행
 
-# 이상치 대체 (훈련 데이터에서만 처리)
-independent_columns = X_train.columns
+# 3. 이상치 대체 (훈련 데이터에서만 처리)
+independent_columns = X_train.columns  # 독립 변수 이름 리스트
 for col in independent_columns:
-    # 현재 열(col)을 제외한 나머지 열(features)에서 이상치 제거
+    # 현재 열(col)을 제외한 나머지 열(features)로 모델 학습
     features = [c for c in independent_columns if c != col]
-    clean_features = non_outliers[features]  # 정상 데이터에서만 추출
-    target = non_outliers[col]  # 현재 예측 대상 열의 정상 값
-
-    # 모델 학습 (RandomForestRegressor)
+    
+    # RandomForestRegressor를 이용하여 대체 값 생성
     model = RandomForestRegressor(n_estimators=100, random_state=42)
-    model.fit(clean_features, target)
+    model.fit(non_outliers[features], non_outliers[col])  # 정상 데이터 기반 학습
+    
+    # 이상치에 대해 예측값으로 대체
+    X_train_imputed.loc[outliers.index, col] = model.predict(outliers[features])
 
-    # 이상치 대체 (예측)
-    predicted_values = model.predict(outliers[features])
-    X_train_scaled.loc[outliers.index, col] = predicted_values
-
-# 'anomaly' 열 제거
-X_train_scaled.drop(columns=['anomaly'], inplace=True)
+# 4. 'anomaly' 열 제거
+X_train_imputed.drop(columns=['anomaly'], inplace=True)
 ```
 
 
 #### 코드 설명
 
-1. **라이브러리 임포트**:
-   - `IsolationForest`: 이상치 탐지(Anomaly Detection)를 위한 비지도 학습 모델. 데이터 분포에서 이상치를 감지합니다.
-   - `RandomForestRegressor`: 이상치를 대체하기 위해 사용할 예측 모델.
+1. **이상치 탐지**:
+   - `IsolationForest`를 사용하여 이상치를 탐지합니다.
+   - `contamination=0.05`로 설정해 데이터의 5%를 이상치로 간주합니다.
+   - 결과는 `anomaly` 열에 저장되며, 값이 `-1`인 경우 이상치, `1`인 경우 정상 데이터로 표시됩니다.
 
-2. **이상치 탐지**:
-   - `IsolationForest(contamination=0.05, random_state=42)`:
-     - `contamination=0.05`: 데이터의 5%를 이상치로 간주합니다.
-     - `random_state=42`: 결과 재현성을 보장하기 위해 랜덤 시드를 고정합니다.
-   - `clf.fit_predict(X_train_scaled)`:
-     - 훈련 데이터를 사용해 이상치(-1)와 정상 데이터(1)를 감지합니다.
-     - 결과는 `anomaly`라는 새로운 열로 추가됩니다.
+2. **이상치와 정상 데이터 분리**:
+   - `outliers`: 이상치(`anomaly == -1`) 행만 포함.
+   - `non_outliers`: 정상 데이터(`anomaly != -1`) 행만 포함.
 
-3. **이상치와 정상 데이터 분리**:
-   - `outliers`:
-     - `X_train_scaled`에서 `anomaly == -1`인 행(이상치)만 선택.
-   - `non_outliers`:
-     - `X_train_scaled`에서 `anomaly != -1`인 행(정상 데이터)만 선택.
+3. **이상치 대체**:
+   - 각 열을 독립적으로 처리하여 이상치를 대체합니다.
+   - 대체 방법:
+     - 정상 데이터를 기반으로 `RandomForestRegressor` 모델을 학습.
+     - 학습된 모델로 이상치 행의 값을 예측하여 대체.
 
-4. **이상치 대체**:
-   - 각 특성(`col`)에 대해, 해당 열을 제외한 나머지 열(`features`)로 정상 데이터를 학습하여 이상치를 대체합니다.
-   - `RandomForestRegressor`:
-     - 비선형 관계를 잘 처리하는 모델로, 정상 데이터를 학습하고 이상치를 예측합니다.
-   - `model.fit(clean_features, target)`:
-     - 정상 데이터에서 현재 특성을 예측하기 위한 모델 학습.
-   - `model.predict(outliers[features])`:
-     - 이상치에 대해 예측 값을 생성하고, 이를 대체 값으로 사용.
+4. **불필요한 열 제거**:
+   - 이상치 탐지에 사용된 `anomaly` 열은 처리 후 삭제하여 데이터 정리.
 
-5. **`anomaly` 열 제거**:
-   - 이상치 처리가 완료되면 `anomaly` 열은 더 이상 필요 없으므로 삭제.
+
+#### 코드 사용 시 주의사항
+1. **훈련 데이터에서만 이상치 탐지 및 처리 수행**:
+   - 테스트 데이터는 모델 평가에 사용되므로 이상치 처리를 수행하지 않습니다.
+
+2. **이상치 대체 방식 선택**:
+   - 이상치를 제거하지 않고 대체한 이유는 데이터 손실을 줄이기 위해서입니다. 이 방식은 데이터가 부족한 경우 특히 유용합니다.
+
+3. **`contamination` 값 조정**:
+   - 데이터의 이상치 비율에 따라 `contamination` 값을 조정해야 합니다. 예를 들어, 실제 이상치가 적으면 `contamination` 값을 줄이는 것이 좋습니다.
+
+4. **모델 변경 가능**:
+   - `RandomForestRegressor` 대신 다른 회귀 모델(예: `LinearRegression`, `GradientBoostingRegressor`)을 사용할 수도 있습니다.
+
+
+#### 활용 예시
+**이상치 탐지만 필요한 경우**
+
+```python
+clf = IsolationForest(contamination=0.05, random_state=42)
+X_train_imputed['anomaly'] = clf.fit_predict(X_train_imputed)
+print(X_train_imputed['anomaly'].value_counts())
+```
+
+**이상치 제거**
+
+```python
+X_train_cleaned = X_train_imputed[X_train_imputed['anomaly'] != -1].drop(columns=['anomaly'])
+```
+
+**이상치 대체 후 데이터 확인**
+
+```python
+print(X_train_imputed.isnull().sum())  # 결측치 여부 확인
+print(X_train_imputed.describe())  # 데이터 분포 확인
+```
+
+
+### 2. 데이터 스케일링(표준화)
+
+```python
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+
+# 1. StandardScaler 객체 생성
+scaler = StandardScaler()
+
+# 2. 훈련 데이터에서 스케일링 기준 학습 및 변환
+X_train_scaled = pd.DataFrame(scaler.fit_transform(X_train_imputed), columns=X_train_imputed.columns)
+
+# 3. 테스트 데이터에 동일한 스케일링 기준 적용
+X_test_scaled = pd.DataFrame(scaler.transform(X_test_imputed), columns=X_test_imputed.columns)
+```
+
+
+#### 코드 설명
+
+1. **스케일링 객체 생성**:
+   - `scaler = StandardScaler()`:
+     - Scikit-learn의 `StandardScaler`를 사용해 평균을 0, 표준 편차를 1로 데이터 스케일링.
+
+2. **훈련 데이터 스케일링**:
+   - `scaler.fit_transform(X_train_imputed)`:
+     - 훈련 데이터의 평균과 표준 편차를 계산(`fit`)하고, 데이터를 변환(`transform`).
+   - `pd.DataFrame(...)`:
+     - Pandas 데이터프레임으로 변환하여 원래 열 이름(`X_train_imputed.columns`)을 유지.
+
+3. **테스트 데이터 스케일링**:
+   - `scaler.transform(X_test_imputed)`:
+     - 훈련 데이터에서 계산된 기준(평균과 표준 편차)을 사용해 테스트 데이터를 변환.
+   - 테스트 데이터는 `fit`을 하지 않고, 훈련 데이터에서 학습된 기준으로만 변환해야 데이터 누출(Data Leakage)을 방지.
 
 
 #### 사용 목적
 
-1. **이상치 감지**:
-   - 데이터 내 이상치를 탐지하고, 이상치가 모델에 미치는 부정적 영향을 줄이기 위해 처리합니다.
-
-2. **이상치 대체**:
-   - 이상치를 단순히 제거하지 않고, 대체 값(예측 값)을 생성해 데이터의 일관성을 유지합니다.
-
-3. **데이터 정제**:
-   - 학습 데이터를 정제해 모델의 학습 및 예측 성능을 향상시킵니다.
-
-
-#### 활용 사례
-
-1. **데이터 정제가 필요한 경우**:
-   - 실험 또는 측정 데이터에서 비정상적인 값(센서 오류, 입력 오류 등)이 포함된 경우.
+1. **특성 간 크기 차이 조정**:
+   - 특성 값 범위가 매우 다를 경우, 머신러닝 모델이 특정 특성에 과도하게 의존할 수 있습니다. 스케일링을 통해 특성 값을 균일하게 조정합니다.
+   - 예: 주택 데이터에서 방의 개수(정수)와 면적(제곱미터)의 값 범위가 다를 수 있습니다.
 
 2. **모델 성능 향상**:
-   - 이상치를 제거하거나 대체하지 않으면 모델이 데이터의 패턴을 잘 학습하지 못할 수 있습니다.
-
-3. **특성 간 관계 활용**:
-   - 다른 특성을 기반으로 이상치 값을 추정하고 대체하는 데 유용합니다.
+   - 거리 기반 모델이나 경사 하강법을 사용하는 모델에서 학습 성능을 개선합니다.
 
 
-#### 매개변수 설명
+#### 주요 매개변수
 
-1. **`IsolationForest`**:
-   - `contamination`: 데이터에서 이상치 비율(기본값: `'auto'`). 여기서는 5%로 설정.
-   - `random_state`: 랜덤 시드로 결과 재현성을 보장.
-   - `n_estimators`: 이상치 탐지를 위한 하위 샘플의 트리 개수(기본값: 100).
+1. **`fit_transform`**:
+   - 훈련 데이터를 사용해 평균과 표준 편차를 계산(`fit`)하고, 데이터를 변환(`transform`).
 
-2. **`RandomForestRegressor`**:
-   - `n_estimators`: 의사결정 나무의 개수(여기서는 100).
-   - `random_state`: 랜덤 시드로 결과 재현성을 보장.
+2. **`transform`**:
+   - 이미 계산된 기준을 사용해 데이터를 변환.
+   - 테스트 데이터에서는 항상 `transform`만 사용해야 함.
 
 
 #### 사용 시 주의사항
 
-1. **훈련 데이터에서만 이상치 탐지**:
-   - 이상치 탐지는 훈련 데이터에서만 수행해야 합니다. 테스트 데이터는 훈련 데이터에 맞춘 변환만 적용합니다.
+1. **훈련-테스트 데이터 분리**:
+   - 훈련 데이터의 기준만으로 테스트 데이터를 변환해야 하며, 테스트 데이터에 대해 `fit_transform`을 수행하면 안 됩니다.
 
-2. **이상치 대체가 필요한 경우**:
-   - 이상치를 제거할 경우 데이터가 부족해질 수 있으므로, 대체가 필요한 상황을 잘 판단해야 합니다.
+2. **결측치 처리 후 수행**:
+   - 결측치가 있는 상태에서는 스케일링을 수행하지 않도록 합니다. 결측치가 있는 경우 오류가 발생하거나 결과가 왜곡될 수 있습니다.
 
-3. **이상치 비율(`contamination`) 설정**:
-   - 이상치 비율이 실제 데이터 분포와 다르면 잘못된 이상치 탐지가 발생할 수 있습니다. 적절한 비율을 설정하는 것이 중요합니다.
+3. **표준화가 필요 없는 모델**:
+   - 트리 기반 모델(예: 의사결정 트리, 랜덤 포레스트, 그래디언트 부스팅 등)은 스케일에 민감하지 않으므로 스케일링이 필요하지 않습니다.
 
 
-#### 활용 상황
+#### 활용 사례
 
-1. **이상치 감지만 필요한 경우**:
-   ```python
-   clf = IsolationForest(contamination=0.1, random_state=42)
-   anomalies = clf.fit_predict(X_train_scaled)
-   ```
-   - 이상치 여부만 탐지하고, 값을 대체하지 않을 때.
+1. **선형 모델**:
+   - 선형 회귀, 로지스틱 회귀, 서포트 벡터 머신(SVM)과 같은 모델에서 사용.
 
-2. **이상치 제거**:
-   ```python
-   X_train_cleaned = X_train_scaled[anomalies != -1]
-   ```
-   - 이상치를 직접 제거하고 데이터 크기를 줄이는 경우.
+2. **거리 기반 모델**:
+   - K-최근접 이웃(KNN), K-평균(K-Means) 등의 거리 계산 모델에서 필수.
 
-3. **이상치 대체**:
-   - 코드에 작성된 방식처럼, 이상치 데이터를 다른 특성을 기반으로 예측 값을 생성하여 대체.
+3. **신경망**:
+   - 신경망 모델에서는 입력 데이터를 스케일링하지 않으면 학습 속도가 느려지거나 불안정해질 수 있습니다.
 
+
+#### 추가 코드 활용 예시
+
+**훈련 데이터에서만 스케일링 기준 학습**
+
+```python
+X_train_scaled = scaler.fit_transform(X_train_imputed)
+```
+
+**테스트 데이터 변환**
+
+```python
+X_test_scaled = scaler.transform(X_test_imputed)
+```
+
+**스케일링 후 데이터 확인**
+
+```python
+print(X_train_scaled.mean(axis=0))  # 평균 확인 (0에 가까워야 함)
+print(X_train_scaled.std(axis=0))   # 표준 편차 확인 (1에 가까워야 함)
+```
