@@ -26,11 +26,15 @@ kramdown:
 # jekyll-archives 설정
 jekyll-archives:
   enabled:
-    - categories      # 카테고리별 아카이브 생성을 활성화
+    - categories  # 카테고리별 아카이브 활성화
+    - tags        # 태그별 아카이브 활성화
   layouts:
-    category: category  # 카테고리별 아카이브에 사용할 레이아웃 파일 지정
+    category: category  # 카테고리 아카이브 레이아웃
+    tag: tag            # 태그 아카이브 레이아웃
   permalinks:
-    category: /category/:name/  # 카테고리 아카이브의 URL 구조 지정
+    category: /category/:name/  # 카테고리 아카이브 URL 구조
+    tag: /tag/:name/            # 태그 아카이브 URL 구조
+  slugify_mode: default         # 슬러그(경로) 형식 설정
 
 # 페이지네이션 설정
 paginate: 8             # 한 페이지에 표시할 포스트 수
