@@ -6,11 +6,7 @@ categories: [Machine Learning]
 tag: []
 ---
 
-
-* TOC
-{:toc}
-
-
+test01
 
 ### 과제 1번: 지도학습
 
