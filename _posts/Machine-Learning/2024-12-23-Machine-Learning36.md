@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Machine Learning 36: 과제 1번: 주택 가격 예측 모델 구축"
+title: "Machine Learning 36: 과제: 주택 가격 예측 모델 구축(데이터 조회 및 결측치 처리)"
 date: 2024-12-23
 categories: [Machine Learning]
 tag: []
@@ -211,7 +211,7 @@ tag: []
    # imputer = KNNImputer(n_neighbors=5, weights='distance')
    df_imputed = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 
-   df_imputed
+   df = df_imputed
    ```
 
    출력 결과
