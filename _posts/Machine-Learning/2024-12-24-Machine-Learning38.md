@@ -263,9 +263,9 @@ lr_r2 = r2_score(y_test, y_pred_lr)
 
 3. **R² (결정 계수)**:
 
-   \\[
+   $$
    R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}
-   \\]
+   $$
 
    - \\(\text{SS}_{\text{res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2\\): 잔차 제곱합(Residual Sum of Squares).
    - \\(\text{SS}_{\text{tot}} = \sum_{i=1}^{n} (y_i - \bar{y})^2\\): 총 제곱합(Total Sum of Squares).
