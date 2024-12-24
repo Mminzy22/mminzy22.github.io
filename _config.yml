@@ -18,6 +18,9 @@ plugins:
 #  - jekyll-toc
 
 # TOC 설정
+# 사용 방법
+# * TOC
+# {:toc}
 kramdown:
   toc_levels: 1..3
 

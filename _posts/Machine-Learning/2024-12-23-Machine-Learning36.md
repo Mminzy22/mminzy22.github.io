@@ -6,8 +6,6 @@ categories: [Machine Learning]
 tag: []
 ---
 
-test01
-
 ### 과제 1번: 지도학습
 
 #### 주제: 주택 가격 예측 모델 구축
