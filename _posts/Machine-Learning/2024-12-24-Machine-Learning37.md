@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Machine Learning 37: 과제: 주택 가격 예측 모델 구축(이상치 처리)"
+title: "Machine Learning 37: 과제: 주택 가격 예측 모델 구축(스케일링 및 이상치 처리)"
 date: 2024-12-24
 categories: [Machine Learning]
 tag: []
