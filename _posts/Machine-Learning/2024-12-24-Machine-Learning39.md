@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Machine Learning 39: 과제: 고객 세분화 분석"
-date: 2024-12-24
+title: "Machine Learning 39: 과제: 고객 세분화 분석(데이터 조회 및 전처리)"
+date: 2024-12-26
 categories: [Machine Learning]
 tag: []
 ---
@@ -10,6 +10,17 @@ tag: []
 
 #### 주제: 고객 세분화 분석
 - [고객 데이터셋]({{ site.baseurl }}/assets/downloads/Mall_Customers.csv)을 사용하여 비슷한 행동을 보이는 고객 그룹을 식별합니다.
+
+<details>
+<summary><strong>컬럼별 설명</strong></summary>
+   <ol>
+      <li>CustomerID: 각 고객을 고유하게 식별할 수 있는 ID입니다.</li>
+      <li>Gender: 고객의 성별입니다. (예: "Male" 또는 "Female")</li>
+      <li>Age: 고객의 나이를 나타냅니다.</li>
+      <li>Annual Income (k$): 고객의 연간 수입을 1,000달러 단위로 나타냅니다.</li>
+      <li>Spending Score (1-100): 고객의 쇼핑 점수로, 1부터 100 사이의 값입니다. 고객의 소비 습관이나 충성도를 평가하는 데 사용됩니다.</li>
+   </ol>
+</details>
 
 <details>
 <summary><strong>과제 가이드</strong></summary>
@@ -68,3 +79,100 @@ tag: []
       </li>
    </ul>
 </details>
+
+### 1. 데이터 불러오기
+
+```python
+import pandas as pd
+import numpy as np
+
+df= pd.read_csv('Mall_Customers.csv')
+
+df
+```
+
+출력 결과
+
+|  | **CustomerID** | **Gender** | **Age** | **Annual Income (k$)** | **Spending Score (1-100)** |
+| --- | --- | --- | --- | --- | --- |
+| **0** | 1 | Male | 19 | 15 | 39 |
+| **1** | 2 | Male | 21 | 15 | 81 |
+| **2** | 3 | Female | 20 | 16 | 6 |
+| **3** | 4 | Female | 23 | 16 | 77 |
+| **4** | 5 | Female | 31 | 17 | 40 |
+| **...** | ... | ... | ... | ... | ... |
+| **195** | 196 | Female | 35 | 120 | 79 |
+| **196** | 197 | Female | 45 | 126 | 28 |
+| **197** | 198 | Male | 32 | 126 | 74 |
+| **198** | 199 | Male | 32 | 137 | 18 |
+| **199** | 200 | Male | 30 | 137 | 83 |
+
+200 rows × 5 columns
+
+### 2. 데이터 정보 확인
+
+```python
+# 데이터 정보 확인
+df.info() # 총 200행, 결측치 없음
+print('=============================='*3)
+print(df.describe())
+# 총 506개 행
+print('=============================='*3)
+print(df.columns)
+```
+
+출력 결과
+
+```python
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 200 entries, 0 to 199
+Data columns (total 5 columns):
+ #   Column                  Non-Null Count  Dtype 
+---  ------                  --------------  ----- 
+ 0   CustomerID              200 non-null    int64 
+ 1   Gender                  200 non-null    object
+ 2   Age                     200 non-null    int64 
+ 3   Annual Income (k$)      200 non-null    int64 
+ 4   Spending Score (1-100)  200 non-null    int64 
+dtypes: int64(4), object(1)
+memory usage: 7.9+ KB
+==========================================================================================
+       CustomerID         Age  Annual Income (k$)  Spending Score (1-100)
+count  200.000000  200.000000          200.000000              200.000000
+mean   100.500000   38.850000           60.560000               50.200000
+std     57.879185   13.969007           26.264721               25.823522
+min      1.000000   18.000000           15.000000                1.000000
+25%     50.750000   28.750000           41.500000               34.750000
+50%    100.500000   36.000000           61.500000               50.000000
+75%    150.250000   49.000000           78.000000               73.000000
+max    200.000000   70.000000          137.000000               99.000000
+==========================================================================================
+Index(['CustomerID', 'Gender', 'Age', 'Annual Income (k$)',
+       'Spending Score (1-100)'],
+      dtype='object')
+```
+
+### 3. 데이터 전처리
+
+```python
+import seaborn as sns
+
+# 분석에 사용하지 않는 컬럼 제거
+data = df.drop(columns=['CustomerID'])
+
+# 이상치 확인
+sns.boxplot(data=data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
+```
+
+```python
+from sklearn.preprocessing import StandardScaler
+
+# Gender 컬럼 원핫인코딩(One-Hot Encoding)
+data = pd.get_dummies(data, columns=['Gender'], drop_first=True)
+
+# 수치형 데이터 표준화
+scaler = StandardScaler()
+data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']] = scaler.fit_transform(
+    data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']]
+)
+```
