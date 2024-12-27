@@ -165,14 +165,42 @@ sns.boxplot(data=data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
 ```
 
 ```python
-from sklearn.preprocessing import StandardScaler
+# CustomerID 제거
+data = data.drop(columns=['CustomerID'])
 
-# Gender 컬럼 원핫인코딩(One-Hot Encoding)
+# Gender 원-핫 인코딩
 data = pd.get_dummies(data, columns=['Gender'], drop_first=True)
 
-# 수치형 데이터 표준화
+# Age, Annual Income, Spending Score의 박스 플롯
+plt.figure(figsize=(8, 4))
+for i, col in enumerate(['Age', 'Annual Income (k$)', 'Spending Score (1-100)']):
+    plt.subplot(1, 3, i + 1)
+    sns.boxplot(data=data[col])
+    plt.title(f'{col} Box Plot')
+plt.tight_layout()
+plt.show()
+
+# 2. 이상치 탐지 (Age, Annual Income, Spending Score에만 적용)
+iso = IsolationForest(contamination=0.03, random_state=42)
+outliers = iso.fit_predict(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
+print(data[outliers != 1])
+# 정상 데이터만 유지
+data = data[outliers == 1]
+
+# 3. 데이터 표준화
 scaler = StandardScaler()
-data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']] = scaler.fit_transform(
-    data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']]
-)
+scaled_data = scaler.fit_transform(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
+
+# 기존 열 삭제 및 새로운 데이터 추가
+data = data.drop(columns=['Age', 'Annual Income (k$)', 'Spending Score (1-100)'])
+data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']] = scaled_data
+
+# Age, Annual Income, Spending Score의 박스 플롯
+plt.figure(figsize=(8, 4))
+for i, col in enumerate(['Age', 'Annual Income (k$)', 'Spending Score (1-100)']):
+    plt.subplot(1, 3, i + 1)
+    sns.boxplot(data=data[col])
+    plt.title(f'{col} Box Plot')
+plt.tight_layout()
+plt.show()
 ```
