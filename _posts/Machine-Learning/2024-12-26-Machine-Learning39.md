@@ -154,6 +154,8 @@ Index(['CustomerID', 'Gender', 'Age', 'Annual Income (k$)',
 
 ### 3. 데이터 전처리
 
+#### 1. **컬럼 제거 및 기본 데이터 시각화**
+
 ```python
 import seaborn as sns
 
@@ -164,10 +166,18 @@ data = df.drop(columns=['CustomerID'])
 sns.boxplot(data=data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
 ```
 
-```python
-# CustomerID 제거
-data = data.drop(columns=['CustomerID'])
+- **`sns.boxplot`**: 
+  - Seaborn 라이브러리를 사용하여 박스 플롯(boxplot)을 그립니다.
+  - 박스 플롯은 데이터 분포를 시각화하고 이상치(outlier)를 감지하는 데 유용합니다.
+  - `data`에서 `Age`, `Annual Income (k$)`, `Spending Score (1-100)` 열의 데이터를 선택해 한 번에 박스 플롯을 시각화합니다.
 
+- **`data = df.drop(columns=['CustomerID'])`**:
+  - `CustomerID` 열은 고객 식별 목적으로만 사용되며, 데이터 분석에 유의미하지 않으므로 제거합니다.
+
+
+#### 2. **원-핫 인코딩과 상세 박스 플롯**
+
+```python
 # Gender 원-핫 인코딩
 data = pd.get_dummies(data, columns=['Gender'], drop_first=True)
 
@@ -179,14 +189,56 @@ for i, col in enumerate(['Age', 'Annual Income (k$)', 'Spending Score (1-100)'])
     plt.title(f'{col} Box Plot')
 plt.tight_layout()
 plt.show()
+```
 
+1. **`pd.get_dummies(data, columns=['Gender'], drop_first=True)`**:
+   - **목적**: 범주형 변수인 `Gender`를 머신러닝 알고리즘이 처리할 수 있도록 숫자형 데이터로 변환합니다.
+   - **설명**:
+     - `Male`과 `Female`로 구성된 `Gender` 열을 0과 1로 인코딩합니다.
+     - `drop_first=True`를 사용하여 첫 번째 범주(`Male`)를 기준으로 나머지 범주(`Female`)를 추가합니다.
+     - 결과적으로 새로운 열 `Gender_Female`이 추가됩니다. 값은 `1`(여성) 또는 `0`(남성)을 나타냅니다.
+
+2. **박스 플롯 시각화**:
+   - 세 개의 주요 열(`Age`, `Annual Income`, `Spending Score`)에 대해 개별적으로 박스 플롯을 생성합니다.
+   - `plt.subplot(1, 3, i + 1)`: 한 행에 세 개의 박스 플롯을 배치합니다.
+   - **출력 결과**:
+     - 각 변수에 대한 데이터 분포와 이상치를 직관적으로 확인할 수 있습니다.
+
+
+#### 3. **이상치 탐지 및 제거**
+
+```python
 # 2. 이상치 탐지 (Age, Annual Income, Spending Score에만 적용)
 iso = IsolationForest(contamination=0.03, random_state=42)
 outliers = iso.fit_predict(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
 print(data[outliers != 1])
 # 정상 데이터만 유지
 data = data[outliers == 1]
+```
 
+1. **`IsolationForest`**:
+   - **목적**: 이상치를 자동으로 감지하고 제거합니다.
+   - **설명**:
+     - `IsolationForest`는 앙상블 기반의 이상치 탐지 알고리즘입니다.
+     - `contamination=0.03`: 데이터 중 약 3%를 이상치로 간주합니다.
+     - `random_state=42`: 재현성을 보장하기 위해 난수 시드를 고정합니다.
+
+2. **`outliers = iso.fit_predict()`**:
+   - 입력 데이터(`Age`, `Annual Income`, `Spending Score`)를 기반으로 이상치를 감지합니다.
+   - 반환값:
+     - `1`: 정상 데이터.
+     - `-1`: 이상치.
+
+3. **`data[outliers != 1]`**:
+   - 이상치로 판단된 데이터를 출력합니다.
+
+4. **`data = data[outliers == 1]`**:
+   - 이상치를 제거하고, 정상 데이터만 유지합니다.
+
+
+#### 4. **데이터 표준화**
+
+```python
 # 3. 데이터 표준화
 scaler = StandardScaler()
 scaled_data = scaler.fit_transform(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
@@ -194,7 +246,23 @@ scaled_data = scaler.fit_transform(data[['Age', 'Annual Income (k$)', 'Spending 
 # 기존 열 삭제 및 새로운 데이터 추가
 data = data.drop(columns=['Age', 'Annual Income (k$)', 'Spending Score (1-100)'])
 data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']] = scaled_data
+```
 
+1. **`StandardScaler`**:
+   - **목적**: 데이터의 스케일을 표준화(평균=0, 표준편차=1)하여 변수 간의 스케일 차이를 제거합니다.
+   - **설명**:
+     - 수치형 변수(`Age`, `Annual Income`, `Spending Score`)를 표준화하여 머신러닝 알고리즘의 성능을 향상시킵니다.
+
+2. **`scaler.fit_transform()`**:
+   - 입력 데이터를 학습(fit)하고, 표준화된 값을 반환(transform)합니다.
+
+3. **`data.drop()` 및 재할당**:
+   - 기존 변수(`Age`, `Annual Income`, `Spending Score`)를 삭제하고, 표준화된 값을 새로 추가합니다.
+
+
+#### 5. **표준화된 데이터 확인**
+
+```python
 # Age, Annual Income, Spending Score의 박스 플롯
 plt.figure(figsize=(8, 4))
 for i, col in enumerate(['Age', 'Annual Income (k$)', 'Spending Score (1-100)']):
@@ -204,3 +272,14 @@ for i, col in enumerate(['Age', 'Annual Income (k$)', 'Spending Score (1-100)'])
 plt.tight_layout()
 plt.show()
 ```
+
+- 표준화된 데이터를 다시 시각화하여 이상치가 제대로 제거되었는지 확인합니다.
+- 박스 플롯은 데이터가 평균=0, 표준편차=1로 표준화되었음을 보여줍니다. 
+
+
+**전체 과정 요약**
+1. **불필요한 열 제거**: `CustomerID` 제거.
+2. **원-핫 인코딩**: `Gender`를 숫자형 데이터로 변환.
+3. **이상치 탐지 및 제거**: `IsolationForest`로 이상치를 감지하고 데이터에서 제외.
+4. **데이터 표준화**: `StandardScaler`로 변수 간 스케일 차이를 조정.
+5. **시각화**: 박스 플롯으로 데이터 분포 및 이상치 제거 결과 확인.

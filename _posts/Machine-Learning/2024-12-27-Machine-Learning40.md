@@ -82,24 +82,34 @@ tag: []
 
 ### 1. 다양한 클러스터링 기법 비교 및 최적의 클러스터 수 결정
 
+다양한 클러스터링 알고리즘(KMeans, Hierarchical Clustering, GMM, DBSCAN)에 대해 최적의 클러스터 수 및 매개변수를 찾고, 각 알고리즘의 성능을 비교합니다. 이를 위해 실루엣 점수(Silhouette Score)와 엘보우 방법을 사용합니다.
+
+
+#### 1. **실루엣 점수 저장용 딕셔너리 초기화**
+
 ```python
-# 실루엣 점수를 저장할 딕셔너리
 silhouette_scores = {
   "KMeans": {},
   "Hierarchical Clustering": {},
   "GMM": {},
   "DBSCAN": {}  # (eps, min_samples) 조합을 키로 사용
 }
+wcss = []  # KMeans의 WCSS 값을 저장
+```
 
-# 엘보우 방법을 위한 WCSS 저장 리스트
-wcss = []
+- **`silhouette_scores`**: 각 클러스터링 알고리즘의 결과와 관련된 실루엣 점수를 저장하기 위한 딕셔너리입니다.
+  - `KMeans`, `Hierarchical Clustering`, `GMM`: 클러스터 수 `k`를 키로 사용.
+  - `DBSCAN`: `(eps, min_samples)` 조합을 키로 사용.
+- **`wcss`**: KMeans 알고리즘의 엘보우 방법에 사용할 `WCSS(Within-Cluster Sum of Squares)` 값을 저장합니다.
 
-# 실루엣 점수 계산 및 저장
+
+#### 2. **KMeans, Hierarchical Clustering, GMM 실루엣 점수 및 WCSS 계산**
+
+```python
 for k in range(2, 11):
   # KMeans
   km = KMeans(n_clusters=k, random_state=42)
   silhouette_scores["KMeans"][k] = silhouette_score(data, km.fit_predict(data))
-
   wcss.append(km.inertia_)
 
   # Hierarchical Clustering
@@ -111,21 +121,40 @@ for k in range(2, 11):
   silhouette_scores["GMM"][k] = silhouette_score(data, gmm.fit_predict(data))
 
   print(f"k={k}, KMeans={silhouette_scores['KMeans'][k]}, Hierarchical={silhouette_scores['Hierarchical Clustering'][k]}, GMM={silhouette_scores['GMM'][k]}")
+```
 
-# DBSCAN 파라미터 조합 설정
+1. **`range(2, 11)`**:
+   - 클러스터 수(`k`)를 2부터 10까지 변경하며 실험을 진행합니다.
+   - 최소 2개의 클러스터가 필요하므로 `k=1`은 제외합니다.
+
+2. **`KMeans`**:
+   - `km.fit_predict(data)`: 데이터를 클러스터링하고 클러스터 레이블을 반환합니다.
+   - **`silhouette_score`**: 클러스터링 결과의 품질을 평가하며, 값이 클수록 클러스터링이 더 잘 이루어졌음을 의미합니다.
+   - `km.inertia_`: 클러스터 내 거리의 합(WCSS)을 계산하여 엘보우 방법에 사용됩니다.
+
+3. **`Hierarchical Clustering`**:
+   - `AgglomerativeClustering`: 계층적 클러스터링을 수행하며, `n_clusters`로 클러스터 수를 설정합니다.
+   - **실루엣 점수 계산**은 KMeans와 동일합니다.
+
+4. **`GMM (Gaussian Mixture Model)`**:
+   - `GaussianMixture(n_components=k)`: GMM으로 `k`개의 혼합 분포를 모델링합니다.
+   - **실루엣 점수 계산**은 위와 동일합니다.
+
+
+#### 3. **DBSCAN 클러스터링 및 실루엣 점수 계산**
+
+```python
 eps_values = [0.5, 0.6, 0.7]
 min_samples_values = [6, 7, 8]
 
-# DBSCAN 점수 계산
-dbscan_scores = {}
 for eps in eps_values:
   for min_samples in min_samples_values:
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
     data['Cluster_DBSCAN'] = dbscan.fit_predict(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)', 'Gender_Male']])
     
-    # 노이즈 제거 (-1 레이블 제외)
+    # 노이즈 제거
     labels = data['Cluster_DBSCAN']
-    if len(set(labels)) > 1:  # 최소 2개의 클러스터가 있어야 실루엣 점수 계산 가능
+    if len(set(labels)) > 1:
       non_noise_data = data[labels != -1]
       non_noise_labels = labels[labels != -1]
       score = silhouette_score(non_noise_data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)', 'Gender_Male']], non_noise_labels)
@@ -133,30 +162,39 @@ for eps in eps_values:
       silhouette_scores["DBSCAN"][(eps, min_samples)] = score
       print(f"eps={eps}, min_samples={min_samples}, Silhouette Score={score:.4f}")
     else:
-      print(f"eps={eps}, min_samples={min_samples}, insufficient clusters (only noise or 1 cluster).")
+      print(f"eps={eps}, min_samples={min_samples}, insufficient clusters.")
+```
 
-# 실루엣 점수가 가장 높은 K를 저장
+- **DBSCAN 파라미터 조합**:
+  - `eps_values`: 클러스터링 반경.
+  - `min_samples_values`: 클러스터를 형성하기 위한 최소 데이터 포인트 개수.
+  
+- **노이즈 처리**:
+  - DBSCAN은 클러스터에 속하지 않는 노이즈 데이터를 `-1`로 레이블링합니다.
+  - `labels != -1`: 노이즈 데이터를 제외한 데이터로 실루엣 점수를 계산합니다.
+
+
+#### 4. **최적 클러스터 수 및 매개변수 선택**
+
+```python
 best_k = {}
-
-# KMeans, Hierarchical Clustering, GMM 처리
 for method in ["KMeans", "Hierarchical Clustering", "GMM"]:
   scores = silhouette_scores[method]
   best_k[method] = max(scores, key=scores.get)
 
-# DBSCAN 처리
 if silhouette_scores["DBSCAN"]:
   best_dbscan_params = max(silhouette_scores["DBSCAN"], key=silhouette_scores["DBSCAN"].get)
   best_k["DBSCAN"] = best_dbscan_params
+```
 
-# 결과 출력
-for method, k in best_k.items():
-  if method == "DBSCAN":
-    print(f"Best params for {method}: eps={k[0]}, min_samples={k[1]} with Silhouette Score: {silhouette_scores[method][k]}")
-  else:
-    print(f"Best k for {method}: {k} with Silhouette Score: {silhouette_scores[method][k]}")
+- **`best_k`**: 각 알고리즘에서 가장 높은 실루엣 점수를 가지는 클러스터 수 또는 DBSCAN 파라미터 조합을 저장합니다.
 
 
-# 엘보우 방법 시각화
+#### 5. **시각화**
+
+**5.1 엘보우 방법 시각화 (KMeans)**
+
+```python
 plt.figure(figsize=(8, 4))
 plt.plot(range(2, 11), wcss, marker='o')
 plt.title('Elbow Method for KMeans')
@@ -164,16 +202,20 @@ plt.xlabel('Number of Clusters (k)')
 plt.ylabel('WCSS (Within-Cluster Sum of Squares)')
 plt.grid()
 plt.show()
+```
 
-# 실루엣 점수 시각화
+- X축: 클러스터 수.
+- Y축: WCSS.
+- 엘보우 포인트(급격히 감소가 완화되는 지점)를 찾아 최적의 클러스터 수를 결정합니다.
+
+**5.2 실루엣 점수 시각화**
+
+```python
 plt.figure(figsize=(10, 6))
-
-# KMeans, Hierarchical, GMM 점수 시각화
 for method, scores in silhouette_scores.items():
     if method != "DBSCAN":
         plt.plot(scores.keys(), scores.values(), label=method, marker='o')
 
-# DBSCAN 점수 시각화
 dbscan_x = [f"{eps}-{min_samples}" for eps, min_samples in silhouette_scores["DBSCAN"].keys()]
 dbscan_y = silhouette_scores["DBSCAN"].values()
 plt.plot(dbscan_x, dbscan_y, label="DBSCAN", marker='x', linestyle='--')
@@ -185,22 +227,57 @@ plt.legend()
 plt.grid()
 plt.xticks(rotation=45)
 plt.show()
-
 ```
+
+- **각 알고리즘의 실루엣 점수**를 비교하여 최적의 클러스터링 결과를 판단합니다.
+- DBSCAN의 경우, `eps-min_samples` 조합으로 결과를 시각화합니다.
+
+
+#### 전체 요약
+1. **KMeans, Hierarchical Clustering, GMM**:
+   - `k=2~10`에 대해 실루엣 점수와 WCSS를 계산.
+   - 최적의 클러스터 수를 선택.
+
+2. **DBSCAN**:
+   - 다양한 `eps`와 `min_samples` 조합에 대해 실루엣 점수를 계산.
+   - 최적의 조합을 선택.
+
+3. **시각화**:
+   - KMeans의 엘보우 방법과 모든 알고리즘의 실루엣 점수를 시각화하여 결과를 비교.
 
 ### 2. 결과 시각화
 
-```python
-# 최적 클러스터링 및 점수 확인
+클러스터링 결과를 최적화된 매개변수를 사용해 다시 수행하고, 성능(실루엣 점수)을 평가하며, 결과를 시각화합니다.
 
-# 1. KMeans
+
+#### 1. KMeans 클러스터링
+
+```python
 kmeans = KMeans(n_clusters=best_k['KMeans'], random_state=42)
 kmeans_labels = kmeans.fit_predict(data)
 kmeans_score = silhouette_score(data, kmeans_labels)
 cluster_centers = kmeans.cluster_centers_
+```
 
-# KMeans 결과 시각화
-# KMeans 결과 시각화 (2D Scatter Plot)
+1. **KMeans 객체 생성**:
+   - `n_clusters=best_k['KMeans']`: 최적 클러스터 수(`best_k['KMeans']`)를 사용해 KMeans 알고리즘을 설정합니다.
+   - `random_state=42`: 재현 가능한 결과를 보장합니다.
+
+2. **클러스터링 수행**:
+   - `fit_predict(data)`: 데이터를 클러스터링하고 각 데이터 포인트의 클러스터 레이블을 반환합니다.
+   - 결과는 `kmeans_labels`에 저장됩니다.
+
+3. **실루엣 점수 계산**:
+   - `silhouette_score(data, kmeans_labels)`: 클러스터링 결과의 품질을 평가합니다.
+   - 실루엣 점수가 높을수록 클러스터 간 거리가 크고 클러스터 내부가 밀집되어 있음을 의미합니다.
+
+4. **클러스터 중심**:
+   - `kmeans.cluster_centers_`: 각 클러스터의 중심 좌표를 반환합니다.
+
+
+**시각화 - 2D Scatter Plot**
+
+```python
 plt.figure(figsize=(8, 6))
 plt.scatter(data['Annual Income (k$)'], data['Spending Score (1-100)'], 
             c=kmeans_labels, cmap='viridis', s=50, alpha=0.7, label='Cluster Data')
@@ -212,7 +289,21 @@ plt.ylabel('Spending Score (1-100)')
 plt.legend()
 plt.grid(True)
 plt.show()
+```
 
+- **데이터 점**:
+  - `plt.scatter`: 각 데이터 포인트를 클러스터 레이블에 따라 색상(`c=kmeans_labels`)으로 구분해 산점도를 그립니다.
+  - `cmap='viridis'`: 클러스터 색상을 지정합니다.
+  - `alpha=0.7`: 점의 투명도를 설정합니다.
+
+- **클러스터 중심**:
+  - `cluster_centers[:, 1]`, `cluster_centers[:, 2]`: 클러스터 중심 좌표를 산점도로 표시합니다.
+  - 빨간색(`c='red'`) X 마커(`marker='X'`)로 표시됩니다.
+
+
+**시각화 - 3D Scatter Plot**
+
+```python
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection='3d')
 scatter = ax.scatter(data['Age'], data['Annual Income (k$)'], data['Spending Score (1-100)'], 
@@ -223,36 +314,109 @@ ax.set_ylabel('Annual Income (k$)')
 ax.set_zlabel('Spending Score (1-100)')
 plt.colorbar(scatter, label='Cluster Label')
 plt.show()
+```
 
-print(f"KMeans 실루엣 스코어 = {kmeans_score}")
+- **3D 클러스터링 결과 시각화**:
+  - `projection='3d'`: 3D 플롯을 생성합니다.
+  - `ax.scatter`: 3D 공간에서 데이터를 클러스터 레이블(`c=kmeans_labels`)에 따라 시각화합니다.
+  - 축 설정:
+    - `set_xlabel`, `set_ylabel`, `set_zlabel`: 각각 X, Y, Z 축 이름을 설정합니다.
 
 
-# 2. 계층적 군집화
+#### 2. 계층적 군집화
+
+```python
 hc = AgglomerativeClustering(n_clusters=best_k['Hierarchical Clustering'])
 hc_labels = hc.fit_predict(data)
 hc_score = silhouette_score(data, hc_labels)
 print(f"계층적 군집화 실루엣 스코어 = {hc_score}")
+```
 
-# 3. DBSCAN
+1. **계층적 군집화 객체 생성**:
+   - `AgglomerativeClustering(n_clusters=best_k['Hierarchical Clustering'])`: 최적 클러스터 수를 설정해 계층적 군집화를 수행합니다.
+
+2. **클러스터링 수행**:
+   - `fit_predict(data)`: 데이터를 클러스터링하고 레이블을 반환합니다.
+
+3. **실루엣 점수 계산**:
+   - `silhouette_score(data, hc_labels)`: 클러스터링 품질을 평가합니다.
+
+
+###$ 3. DBSCAN 클러스터링
+
+```python
 dbscan = DBSCAN(eps=best_dbscan_params[0], min_samples=best_dbscan_params[1])
 dbscan_labels = dbscan.fit_predict(data)
+```
 
+1. **DBSCAN 객체 생성**:
+   - `eps=best_dbscan_params[0]`: 최적 반경(`eps`) 설정.
+   - `min_samples=best_dbscan_params[1]`: 최적 최소 샘플 수(`min_samples`) 설정.
+
+2. **클러스터링 수행**:
+   - `fit_predict(data)`: 데이터를 클러스터링하고 레이블을 반환합니다.
+   - 레이블:
+     - `-1`: 노이즈 데이터.
+     - `0, 1, ...`: 클러스터 레이블.
+
+**노이즈 데이터 제거 및 실루엣 점수 계산**
+
+```python
 non_noise_data = data[dbscan_labels != -1]
 non_noise_labels = dbscan_labels[dbscan_labels != -1]
 dbscan_score = silhouette_score(non_noise_data, non_noise_labels)
-print(f"DBSCAN 실루엣 스코어 (without noise) = {dbscan_score}")
+```
 
-# DBSCAN 데이터 손실 비율 계산
-total_data_points = len(data)  # 전체 데이터 포인트 수
-noise_points = len(data[dbscan_labels == -1])  # 노이즈로 분류된 데이터 포인트 수
-loss_ratio = noise_points / total_data_points  # 손실 비율 계산
+- **노이즈 제거**:
+  - `dbscan_labels != -1`: 노이즈로 분류된 데이터를 제외합니다.
 
-# 손실 비율 출력
+- **실루엣 점수 계산**:
+  - 노이즈 제거된 데이터(`non_noise_data`)를 기반으로 실루엣 점수를 계산합니다.
+
+**데이터 손실 비율**
+
+```python
+noise_points = len(data[dbscan_labels == -1])
+loss_ratio = noise_points / total_data_points
 print(f"DBSCAN 데이터 손실 비율: {loss_ratio:.2%}")
+```
 
-# 4. GMM
+- **데이터 손실 비율**:
+  - 전체 데이터 중 노이즈 데이터가 차지하는 비율을 계산합니다.
+
+
+#### 4. GMM (Gaussian Mixture Model)
+
+```python
 gmm = GaussianMixture(n_components=best_k['GMM'], random_state=42)
 gmm_labels = gmm.fit_predict(data)
 gmm_score = silhouette_score(data, gmm_labels)
 print(f"GMM 실루엣 스코어 = {gmm_score}")
 ```
+
+1. **GMM 객체 생성**:
+   - `n_components=best_k['GMM']`: 최적 클러스터 수를 설정합니다.
+   - `random_state=42`: 결과 재현성을 보장합니다.
+
+2. **클러스터링 수행**:
+   - `fit_predict(data)`: 데이터를 클러스터링하고 레이블을 반환합니다.
+
+3. **실루엣 점수 계산**:
+   - `silhouette_score(data, gmm_labels)`: GMM 클러스터링 결과의 품질을 평가합니다.
+
+
+**출력 예시**
+
+```text
+KMeans 실루엣 스코어 = 0.6123
+계층적 군집화 실루엣 스코어 = 0.5985
+DBSCAN 실루엣 스코어 (without noise) = 0.4872
+DBSCAN 데이터 손실 비율: 12.50%
+GMM 실루엣 스코어 = 0.6054
+```
+
+#### 전체 요약
+1. **KMeans**: 최적 클러스터 수와 실루엣 점수를 계산하고, 2D 및 3D로 결과를 시각화.
+2. **계층적 군집화**: 최적 클러스터 수에 따른 실루엣 점수를 계산.
+3. **DBSCAN**: 노이즈 데이터를 제거하고 실루엣 점수와 데이터 손실 비율을 계산.
+4. **GMM**: 최적 클러스터 수에 따른 실루엣 점수를 계산.
