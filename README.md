@@ -20,6 +20,7 @@
 .
 ├── _posts/              # 블로그 글이 저장되는 폴더 (Markdown 파일 형식)
 │   ├── Bootcamp/
+│   ├── Django/
 │   ├── Machine-Learning/
 │   ├── Python/
 │   └── SQL/
@@ -40,6 +41,7 @@
 │   └── downloads/ 
 ├── category/            # 각 카테고리 페이지를 정의하는 HTML 파일 저장
 │   ├── bootcamp.html
+│   ├── django.html
 │   ├── machine-learning.html
 │   ├── python.html
 │   └── sql.html
