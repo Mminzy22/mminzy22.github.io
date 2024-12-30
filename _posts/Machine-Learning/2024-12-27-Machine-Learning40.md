@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Machine Learning 40: 과제: 고객 세분화 분석(클러스터링 기법 비교 및 시각화화)"
+title: "Machine Learning 40: 과제: 고객 세분화 분석(클러스터링 기법 비교 및 시각화)"
 date: 2024-12-27
 categories: [Machine Learning]
 tag: []
