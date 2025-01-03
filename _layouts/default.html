@@ -3,7 +3,12 @@
 <head>
     {% include meta.html %}
     <title>{{ page.title }} | MINJI BLOG</title> 
-    <!-- 현재 페이지 제목과 블로그 이름을 결합하여 페이지 제목 설정 -->
+
+    <!-- Mermaid.js 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 
     <!-- Highlight.js CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css" rel="stylesheet">
