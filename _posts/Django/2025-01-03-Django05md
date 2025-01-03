@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Django 05: "
+title: "Django 05: 요청과 응답, 그리고 템플릿 시스템의 이해"
 date: 2025-01-03
 categories: [Django]
 tag: []
