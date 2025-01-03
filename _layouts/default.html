@@ -12,11 +12,12 @@
     <!-- 하이라이트 활성화 -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll("pre code").forEach((block) => {
-                hljs.highlightElement(block); // 블록 코드블럭에 하이라이트 적용
+            document.querySelectorAll("pre code:not(.language-mermaid)").forEach((block) => {
+                hljs.highlightElement(block); // Mermaid.js가 아닌 코드 블록만 하이라이트
             });
         });
     </script>
+    
 
     <!-- KaTeX를 사용한 LaTeX 수식 렌더링 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.4/katex.min.css">
@@ -33,6 +34,15 @@
             });
         });
     </script>
+
+    <!-- Mermaid.js 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            mermaid.initialize({ startOnLoad: true }); // Mermaid.js만 활성화
+        });
+    </script>    
+    
 
     <!-- CSS 파일 연결 (_config.yml의 baseurl을 사용하여 상대 경로 처리) -->
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
