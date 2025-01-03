@@ -343,11 +343,11 @@ urlpatterns = [
 
 템플릿에서 변수를 출력하려면 다음과 같이 작성합니다:
 
-```html
 {% raw %}
+```html
 {{ variable }}
-{% endraw %}
 ```
+{% endraw %}
 
 - `render()` 함수에서 전달한 context 데이터를 출력합니다.
 - 예시:
@@ -360,56 +360,56 @@ def greet(request):
     return render(request, "greet.html", context)
 ```
 
-```html
 {% raw %}
+```html
 <!-- greet.html -->
 <h1>Hello, {{ name }}!</h1>
-{% endraw %}
 ```
+{% endraw %}
 
 #### **2. 필터 (Filters)**
 
 필터는 출력 데이터를 수정하는 데 사용됩니다:
 
-```html
 {% raw %}
+```html
 {{ variable|filter }}
-{% endraw %}
 ```
+{% endraw %}
 
 - 예시:
 
-```html
 {% raw %}
+```html
 {{ name|lower }} <!-- Aiden을 aiden으로 변환 -->
-{% endraw %}
 ```
+{% endraw %}
 
 #### **3. 태그 (Tags)**
 
 태그는 조건문, 반복문 등 템플릿 제어 구조를 제공합니다:
 
-```html
 {% raw %}
+```html
 {% for item in items %}
   <p>{{ item }}</p>
 {% endfor %}
-{% endraw %}
 ```
+{% endraw %}
 
 #### **4. 주석 (Comments)**
 
 템플릿 코드에 주석을 추가하려면 다음과 같이 작성합니다:
 
-```html
 {% raw %}
+```html
 {# 한 줄 주석 #}
 
 {% comment %}
 여러 줄 주석
 {% endcomment %}
-{% endraw %}
 ```
+{% endraw %}
 
 
 ### **Template Inheritance: 템플릿 상속**
@@ -420,8 +420,8 @@ def greet(request):
 
 ##### **`base.html`**
 
-```html
 {% raw %}
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -435,15 +435,15 @@ def greet(request):
     <footer>{% block footer %}Default Footer{% endblock %}</footer>
   </body>
 </html>
-{% endraw %}
 ```
+{% endraw %}
 
 #### **2. 하위 템플릿 작성**
 
 ##### **`index.html`**
 
-```html
 {% raw %}
+```html
 {% extends "base.html" %}
 
 {% block title %}Home Page{% endblock %}
@@ -451,8 +451,8 @@ def greet(request):
 {% block content %}
 <h1>Welcome to My Django Site</h1>
 {% endblock %}
-{% endraw %}
 ```
+{% endraw %}
 
 
 ### **Custom Template Directory**
