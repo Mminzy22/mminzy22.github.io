@@ -383,13 +383,17 @@ def greet(request):
 필터는 출력 데이터를 수정하는 데 사용됩니다:
 
 ```html
+{% raw %}
 {{ variable|filter }}
+{% endraw %}
 ```
 
 - 예시:
 
 ```html
+{% raw %}
 {{ name|lower }} <!-- Aiden을 aiden으로 변환 -->
+{% endraw %}
 ```
 
 #### **3. 태그 (Tags)**
@@ -429,6 +433,7 @@ def greet(request):
 ##### **`base.html`**
 
 ```html
+{% raw %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -442,6 +447,7 @@ def greet(request):
     <footer>{% block footer %}Default Footer{% endblock %}</footer>
   </body>
 </html>
+{% endraw %}
 ```
 
 #### **2. 하위 템플릿 작성**
