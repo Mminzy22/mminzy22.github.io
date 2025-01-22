@@ -2,7 +2,7 @@
     position: absolute;
     width: 100px;
     height: 100px;
-    background: url('/static/images/butterfly-5707_256.gif') no-repeat center center;
+    background: url('/assets/img/butterfly-5707_256.gif') no-repeat center center;
     background-size: contain;
     pointer-events: none; /* 요소에 마우스 이벤트를 막지 않음 */
     transform: translate(-10%, -10%);
