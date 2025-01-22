@@ -101,7 +101,7 @@ cdn: "https://mminzy22.github.io"
 
 # the avatar on sidebar, support local or CORS resources
 # avatar: "/images/avatar.png"  # 블로그 리포지토리의 `/images/avatar.png` 경로에 저장된 파일
-avatar:
+avatar: "/assets/img/20181105_164857.jpg"
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
