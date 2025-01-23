@@ -14,4 +14,4 @@ order: 4
 
 ### Contact
 - 📧 이메일: aw7022@gmail.com  
-- 🐙 [GitHub](https://github.com/Mminy22)
+- 🐙 [GitHub](https://github.com/Mminzy22)
