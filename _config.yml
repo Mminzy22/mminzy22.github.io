@@ -62,7 +62,7 @@ analytics:
   google:
     id:  "G-K0WC76ZYL2" # fill in your Google Analytics ID
   goatcounter:
-    id: # fill in your GoatCounter ID
+    id: "mminzy22.goatcounter.com"
   umami:
     id: # fill in your Umami ID
     domain: # fill in your Umami domain
