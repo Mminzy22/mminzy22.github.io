@@ -13,5 +13,5 @@ order: 4
 - 데이터 분석과 시각화
 
 ### Contact
-- 📧 이메일: aw7022@gmail.com  
-- 🐙 [GitHub](https://github.com/Mminzy22)
+- [E-Mail](aw7022@gmail.com)
+- [GitHub](https://github.com/Mminzy22)
