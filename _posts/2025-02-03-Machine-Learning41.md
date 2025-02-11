@@ -1,5 +1,5 @@
 ---
-title: "딥러닝의 시작: 퍼셉트론에서 RNN까지"
+title: "특강: 딥러닝. 퍼셉트론에서 RNN까지"
 author: mminzy22
 date: 2025-02-03 20:00:00 +0900
 categories: [Machine Learning]
