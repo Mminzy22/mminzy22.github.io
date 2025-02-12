@@ -1,5 +1,5 @@
 ---
-title: "주택 가격 예측 모델 구축 (과제 해설)"
+title: "지도학습: 주택 가격 예측 모델 구축 (과제 해설)"
 author: mminzy22
 date: 2025-02-12 19:00:00 +0900
 categories: [Machine Learning, 과제]
