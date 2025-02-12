@@ -1,5 +1,5 @@
 ---
-title: "ML: k-최근접 이웃 회귀와 머신러닝 데이터 준비 과정"
+title: "k-최근접 이웃 회귀와 머신러닝 데이터 준비 과정"
 author: mminzy22
 date: 2024-12-10 10:00:00 +0900
 categories: [Machine Learning]

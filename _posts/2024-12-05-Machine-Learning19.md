@@ -1,5 +1,5 @@
 ---
-title: "ML: 딥러닝 모델 설계와 학습"
+title: "딥러닝 모델 설계와 학습"
 author: mminzy22
 date: 2024-12-05 10:18:00 +0900
 categories: [Machine Learning]

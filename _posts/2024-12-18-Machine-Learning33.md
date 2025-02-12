@@ -1,5 +1,5 @@
 ---
-title: "ML: 차원 축소와 PCA(주성분 분석) 이해하기"
+title: "차원 축소와 PCA(주성분 분석) 이해하기"
 author: mminzy22
 date: 2024-12-18 10:00:00 +0900
 categories: [Machine Learning]

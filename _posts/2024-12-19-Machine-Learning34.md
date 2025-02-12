@@ -1,5 +1,5 @@
 ---
-title: "ML: 딥러닝과 인공 신경망: 텐서플로를 활용한 패션 MNIST 분류"
+title: "딥러닝과 인공 신경망: 텐서플로를 활용한 패션 MNIST 분류"
 author: mminzy22
 date: 2024-12-19 10:00:00 +0900
 categories: [Machine Learning]

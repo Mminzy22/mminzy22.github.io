@@ -1,5 +1,5 @@
 ---
-title: "ML: 결정 트리와 로지스틱 회귀를 활용한 와인 분류"
+title: "결정 트리와 로지스틱 회귀를 활용한 와인 분류"
 author: mminzy22
 date: 2024-12-12 10:00:00 +0900
 categories: [Machine Learning]

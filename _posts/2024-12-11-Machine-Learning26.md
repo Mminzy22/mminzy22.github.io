@@ -1,5 +1,5 @@
 ---
-title: "ML: 로지스틱 회귀: 럭키백 확률 계산 및 K-최근접 이웃 분류기"
+title: "로지스틱 회귀: 럭키백 확률 계산 및 K-최근접 이웃 분류기"
 author: mminzy22
 date: 2024-12-11 10:00:00 +0900
 categories: [Machine Learning]

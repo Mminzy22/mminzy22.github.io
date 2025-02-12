@@ -1,5 +1,5 @@
 ---
-title: "ML: 심층 신경망 구현 및 학습: 패션 MNIST 데이터셋 사례"
+title: "심층 신경망 구현 및 학습: 패션 MNIST 데이터셋 사례"
 author: mminzy22
 date: 2024-12-20 10:00:00 +0900
 categories: [Machine Learning]

@@ -1,5 +1,5 @@
 ---
-title: "ML: 주요 딥러닝 라이브러리 소개"
+title: "주요 딥러닝 라이브러리 소개"
 author: mminzy22
 date: 2024-12-05 10:17:00 +0900
 categories: [Machine Learning]

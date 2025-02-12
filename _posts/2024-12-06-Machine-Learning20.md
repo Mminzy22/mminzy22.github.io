@@ -1,5 +1,5 @@
 ---
-title: "ML: 도미와 빙어 데이터를 활용한 머신러닝 학습"
+title: "도미와 빙어 데이터를 활용한 머신러닝 학습"
 author: mminzy22
 date: 2024-12-06 10:00:00 +0900
 categories: [Machine Learning]

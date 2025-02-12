@@ -1,5 +1,5 @@
 ---
-title: "ML: 특성 공학과 규제: 머신러닝 모델의 숨은 비법"
+title: "특성 공학과 규제: 머신러닝 모델의 숨은 비법"
 author: mminzy22
 date: 2024-12-10 11:30:00 +0900
 categories: [Machine Learning]

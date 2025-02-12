@@ -1,5 +1,5 @@
 ---
-title: "ML: k-평균 알고리즘을 활용한 과일 사진 자동 군집화"
+title: "k-평균 알고리즘을 활용한 과일 사진 자동 군집화"
 author: mminzy22
 date: 2024-12-17 10:00:00 +0900
 categories: [Machine Learning]

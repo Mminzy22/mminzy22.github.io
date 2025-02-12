@@ -1,5 +1,5 @@
 ---
-title: "ML: 확률적 경사 하강법 (Stochastic Gradient Descent, SGD)"
+title: "확률적 경사 하강법 (Stochastic Gradient Descent, SGD)"
 author: mminzy22
 date: 2024-12-11 11:00:00 +0900
 categories: [Machine Learning]

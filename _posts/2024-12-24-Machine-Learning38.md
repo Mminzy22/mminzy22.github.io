@@ -1,8 +1,8 @@
 ---
-title: "ML: 과제: 주택 가격 예측 모델 구축(모델 학습 및 평가)"
+title: "주택 가격 예측 모델 구축(모델 학습 및 평가)"
 author: mminzy22
 date: 2024-12-24 11:00:00 +0900
-categories: [Machine Learning]
+categories: [Machine Learning, 과제]
 tags: [Bootcamp, Python, Machine Learning, TIL]
 description: "주택 가격 예측 모델 구축을 위한 과제입니다. 다양한 회귀 모델을 비교하고 최적의 모델을 선택하여 성능을 평가합니다."
 pin: false

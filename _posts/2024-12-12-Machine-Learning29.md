@@ -1,5 +1,5 @@
 ---
-title: "ML: 교차 검증과 그리드 서치"
+title: "교차 검증과 그리드 서치"
 author: mminzy22
 date: 2024-12-12 10:30:00 +0900
 categories: [Machine Learning]

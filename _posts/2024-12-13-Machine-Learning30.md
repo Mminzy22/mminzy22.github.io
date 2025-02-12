@@ -1,5 +1,5 @@
 ---
-title: "ML: 트리 앙상블 (Tree Ensemble)"
+title: "트리 앙상블 (Tree Ensemble)"
 author: mminzy22
 date: 2024-12-13 10:00:00 +0900
 categories: [Machine Learning]

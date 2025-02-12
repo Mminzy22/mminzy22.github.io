@@ -1,5 +1,5 @@
 ---
-title: "ML: 흑백 사진 분류를 위한 비지도 학습과 군집 알고리즘 이해하기"
+title: "흑백 사진 분류를 위한 비지도 학습과 군집 알고리즘 이해하기"
 author: mminzy22
 date: 2024-12-16 10:00:00 +0900
 categories: [Machine Learning]
