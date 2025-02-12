@@ -10,7 +10,7 @@ pin: false
 
 
 
-### 과제 2번: 비지도학습
+### [과제 2번: 비지도학습](https://mminzy22.github.io/posts/Machine-Learning39/)
 
 #### 주제: 고객 세분화 분석
 - [고객 데이터셋]({{ site.baseurl }}/assets/downloads/Mall_Customers.csv)을 사용하여 비슷한 행동을 보이는 고객 그룹을 식별합니다.

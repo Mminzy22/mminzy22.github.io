@@ -9,7 +9,7 @@ pin: false
 ---
 
 
-### 과제 1번: 지도학습
+### [과제 1번: 지도학습](https://mminzy22.github.io/posts/Machine-Learning36/)
 
 #### 주제: 주택 가격 예측 모델 구축
 - 주어진 [주택 데이터셋]({{ site.baseurl }}/assets/downloads/housingdata.csv)을 사용하여 주택 가격을 예측하는 회귀 모델을 구축한다.
